@@ -4,6 +4,7 @@ use self::element::Element;
 use num::traits::Zero;
 use ndarray::prelude::*;
 use ndarray::iter::{Iter, IterMut};
+use ndarray::NdIndex;
 
 pub struct ImageStorage<E: Element, D: Dimension> {
     data: Array<E, D>,
@@ -86,6 +87,13 @@ where
     fn next(&mut self) -> Option<Self::Item> {
         self.buffer.next()
     }
+}
+
+pub trait Image<E: Element, D: Dimension>: Sized {
+    type Element: Element;
+
+    fn dimensions(&self) -> D::Pattern;
+    fn get_element<I>(&self, index: I) -> Self::Element where I: NdIndex<D>;
 }
 
 #[cfg(test)]

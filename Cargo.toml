@@ -1,0 +1,20 @@
+[package]
+name = "sly"
+version = "0.1.0"
+authors = ["David Kushner <dkushner@westfield.com>"]
+
+[dependencies]
+num = "0.1"
+image = "*"
+log = "0.3.8"
+ndarray = "0.10.11"
+
+[dependencies.collenchyma]
+version = "0.0.8"
+default-features = false
+features = ["native"]
+
+[dependencies.collenchyma-blas]
+version = "0.2.0"
+default-features = false
+features = ["native"]

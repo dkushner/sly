@@ -15,6 +15,8 @@ impl Component for i64 {}
 impl Component for f32 {}
 impl Component for f64 {}
 
+/// Represents an individual element of an image. 
+/// In the case of 2D images, a pixel. For 3D images, a voxel.
 pub trait Element: Copy + Clone {
     type Component: Component;
 
@@ -33,7 +35,7 @@ macro_rules! define_channels {
     (@step $_idx:expr,) => {};
 
     (@step $idx:expr, $head:ident, $($tail:ident,)*) => {
-        pub fn $head(&self, value: C) {
+        pub fn $head(&self) -> C {
             self.data[$idx]
         }
 
@@ -103,3 +105,6 @@ macro_rules! define_color {
 
 define_color!(RGB, 3, (red, green, blue));
 define_color!(RGBA, 4, (red, green, blue, alpha));
+define_color!(HSV, 3, (hue, saturation, value));
+define_color!(HSL, 3, (hue, saturation, lightness));
+define_color!(CMYK, 4, (cyan, magenta, yellow, black));

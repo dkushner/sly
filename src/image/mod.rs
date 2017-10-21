@@ -6,6 +6,7 @@ use ndarray::prelude::*;
 use ndarray::iter::{Iter, IterMut};
 use ndarray::NdIndex;
 
+/// Storage for a patterned collection of image elements.
 pub struct ImageStorage<E: Element, D: Dimension> {
     data: Array<E, D>,
 }
@@ -52,11 +53,33 @@ impl<E: Element, D: Dimension> ImageStorage<E, D> {
             buffer: self.data.iter_mut(),
         }
     }
+
+    pub fn dimensions(&self) -> &[usize] {
+        self.data.shape()
+    }
+
+    pub fn get_element<I>(&self, index: I) -> Option<&E> 
+    where 
+        I: NdIndex<D>,
+    {
+        self.data.get(index)
+    }
+
+    pub fn get_element_mut<I>(&mut self, index: I) -> Option<&mut E> 
+    where
+        I: NdIndex<D>,
+    {
+        self.data.get_mut(index)
+    }
 }
 
+/// Specialization of image storage for two-dimensional images.
 pub type Image2D<E> = ImageStorage<E, Ix2>;
+
+/// Specialization of image storage for three-dimensional image volumes.
 pub type Image3D<E> = ImageStorage<E, Ix3>;
 
+/// Iterator structure that provides element-wise access to the underlying element buffer.
 pub struct Elements<'a, E: 'a, D> {
     buffer: Iter<'a, E, D>,
 }
@@ -73,6 +96,7 @@ where
     }
 }
 
+/// Iterator structure that provides element-wise mutable access to the underlying element buffer.
 pub struct ElementsMut<'a, E: 'a, D> {
     buffer: IterMut<'a, E, D>,
 }
@@ -87,13 +111,6 @@ where
     fn next(&mut self) -> Option<Self::Item> {
         self.buffer.next()
     }
-}
-
-pub trait Image<E: Element, D: Dimension>: Sized {
-    type Element: Element;
-
-    fn dimensions(&self) -> D::Pattern;
-    fn get_element<I>(&self, index: I) -> Self::Element where I: NdIndex<D>;
 }
 
 #[cfg(test)]
